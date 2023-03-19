@@ -1,10 +1,10 @@
 #include "MqttWildcard.h"
 
-int MqttWildcard::explode(String *results, String source, char delimiter) {
+int MqttWildcard::explode(String * results, String source, char delimiter) {
     int count = 0;
     int index = 0;
     
-    for (int i = 0; i < source.length(); i++) {
+    for (unsigned int i = 0; i < source.length(); i++) {
         if (source.charAt(i) == delimiter) {
             results[count++] = source.substring(index, i);
             index = i+1;
@@ -14,6 +14,7 @@ int MqttWildcard::explode(String *results, String source, char delimiter) {
 
     return count;
 }
+
 bool MqttWildcard::wildcardMatch(String topic, String wildcard) {
     // Catch trivial matches
     if (topic == wildcard) return true;
@@ -28,7 +29,6 @@ bool MqttWildcard::wildcardMatch(String topic, String wildcard) {
     // Impossible to match since wildcard "+/+/#" is not matched by topic foo/bar
     if (exploded_wildcard_count > exploded_topic_count) return false;
 
-    int match_count = 0;
     for (int i = 0; i < exploded_wildcard_count; i++) {
         if (exploded_wildcard[i] == "+") {
             continue;

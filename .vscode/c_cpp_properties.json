@@ -1,0 +1,37 @@
+{
+    "env": {
+        "ArduinoESP": "${LOCALAPPDATA}/Arduino15/packages/esp8266",
+        "ESPhome": "${ArduinoESP}/hardware/esp8266/3.1.1",
+        "LibBase": "${workspaceFolder}/../libraries",
+        "Libraries": [
+        ],
+        "ESP_GCC": "${ArduinoESP}/tools/xtensa-lx106-elf-gcc/3.1.0-gcc10.3-e5f9fec/bin"
+    },
+    "configurations": [
+        {
+            "name": "ESP8266lib",
+            "browse": {
+                "path": [
+                    "${ESPhome}"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "includePath": [
+                "${ESPhome}/cores/esp8266/**",
+                "${ESPhome}/tools/sdk/**",
+                "${ESPhome}/variants/nodemcu/**",
+                "${ESPhome}/libraries/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "${ESP_GCC}/xtensa-lx106-elf-g++.exe",            "cStandard": "c17",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-arm"
+        }
+    ],
+    "version": 4
+}

@@ -1,0 +1,17 @@
+#ifndef __PUBSUB_CLIENT_TOOLS_DEFAULTS__
+#define __PUBSUB_CLIENT_TOOLS_DEFAULTS__
+
+#include <PubSubClient.h>
+
+#ifndef CLIENTID_BUFFER_SIZE
+#define CLIENTID_BUFFER_SIZE 50
+#endif
+#ifndef MESSAGE_BUFFER_SIZE
+#define MESSAGE_BUFFER_SIZE MQTT_MAX_PACKET_SIZE
+#endif
+#ifndef MAX_CALLBACK_LIST_SIZE
+#define MAX_CALLBACK_LIST_SIZE 20
+#endif
+
+
+#endif

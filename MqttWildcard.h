@@ -2,11 +2,12 @@
 #define MqttWildcard_h
 
 #include <Arduino.h>
-#include <PubSubClientTools.h>
+#include <WString.h>
 
 #ifndef TOPIC_BUFFER_SIZE
 #define TOPIC_BUFFER_SIZE 100
 #endif
+
 
 class MqttWildcard {
     public:
