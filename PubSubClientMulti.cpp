@@ -4,22 +4,22 @@
 #include "defaults.h"
 
 // Published
-#include "PubSubClientTools.h"
+#include "PubSubClientMulti.h"
 
-PubSubClientTools::PubSubClientTools(PubSubClient & _pubSub) : pubSub(_pubSub) {
+PubSubClientMulti::PubSubClientMulti(PubSubClient & _pubSub) : pubSub(_pubSub) {
     DBGln(3, "+ini");
     pubSub.setCallback(mqtt_callback);
     DBGln(3, "-ini");
 };
 
 
-bool PubSubClientTools::connected() {
+bool PubSubClientMulti::connected() {
     DBGln(3, "connected");
     return pubSub.connected();
 }
 
 
-bool PubSubClientTools::connect(const String & clientId,
+bool PubSubClientMulti::connect(const String & clientId,
         const String & user, const String & pass,
         const String & willTopic, int willQoS, bool willRetain,
         const String & willMessage) {
@@ -40,35 +40,35 @@ void dummy_cb(CALLBACK_ARGS){
 }
 
 // std::string & -> char * -> pubSub
-bool PubSubClientTools::publish(const std::string & topic, const std::string & message, bool retained) {
+bool PubSubClientMulti::publish(const std::string & topic, const std::string & message, bool retained) {
     if (! pubSub.connected())return false;
     Serial_println("pub2");
     return pubSub.publish(topic.c_str(), message.c_str(), retained);
 }
 
 // String & -> char *
-bool PubSubClientTools::publish(const String & topic, const String & message, bool retained) {
+bool PubSubClientMulti::publish(const String & topic, const String & message, bool retained) {
     if (! pubSub.connected())return false;
     Serial_println("pub2");
     return pubSub.publish(topic.c_str(), message.c_str(), retained);
 }
 
 // char * -> PubSub
-bool PubSubClientTools::publish(const char * topic, const char * message, bool retained) {
+bool PubSubClientMulti::publish(const char * topic, const char * message, bool retained) {
     if (! pubSub.connected())return false;
     Serial_println("pub2");
     return pubSub.publish(topic, message, retained);
 }
 
 // String & -> std::string
-bool PubSubClientTools::subscribe(const String & topic, const callback_pt cb_fn) {
+bool PubSubClientMulti::subscribe(const String & topic, const callback_pt cb_fn) {
     std::string s(topic.c_str());
     Serial_println("sub1");
     return subscribe(s, cb_fn);
 }
 
 // char * -> std::string
-bool PubSubClientTools::subscribe(const char * topic, const callback_pt cb_fn) {
+bool PubSubClientMulti::subscribe(const char * topic, const callback_pt cb_fn) {
     std::string s(topic);
     Serial_println("sub2");
     return subscribe(s, cb_fn);
@@ -76,7 +76,7 @@ bool PubSubClientTools::subscribe(const char * topic, const callback_pt cb_fn) {
 
 // Check if at least one callback exists for the given topic
 // and optionally if that matches an exsting callback
-CallBackTopic * PubSubClientTools::findCallbackTopic(const std::string & topic,
+CallBackTopic * PubSubClientMulti::findCallbackTopic(const std::string & topic,
     const callback_pt cb_ptr) {
     
     CallBackTopic * p_cb;
@@ -90,7 +90,7 @@ CallBackTopic * PubSubClientTools::findCallbackTopic(const std::string & topic,
 }
 
 // std::string & -> char * -> pubSub 
-bool PubSubClientTools::subscribe(const std::string & topic, const callback_pt cb_ptr) {
+bool PubSubClientMulti::subscribe(const std::string & topic, const callback_pt cb_ptr) {
     DBGln(3, "sub4");
     if (countCallBacks() >= MAX_CALLBACK_LIST_SIZE) return false;
     if (cb_ptr == nullptr) return false;
@@ -119,7 +119,7 @@ return:
  false if the unsubscribe failed
  true if you were unsubscribed or you were never subscribed
 */
-bool PubSubClientTools::unsubscribe(const std::string & topic) {
+bool PubSubClientMulti::unsubscribe(const std::string & topic) {
     CallBackTopic * p_cbt;
 
     // Ask the Broker to unsubscribe
@@ -138,7 +138,7 @@ bool PubSubClientTools::unsubscribe(const std::string & topic) {
 // Stop responding to messages but don't unsubscribe
 // You can suspend a given callback or a given topic or both
 // Returns true if anything changed else false
-bool PubSubClientTools::pause_restore(const std::string & topic, const callback_pt callback, bool pause) {
+bool PubSubClientMulti::pause_restore(const std::string & topic, const callback_pt callback, bool pause) {
     CallBackTopic * p_cb;
     bool ret = false;
 
@@ -154,7 +154,7 @@ bool PubSubClientTools::pause_restore(const std::string & topic, const callback_
 }
 
 // call if you think the broker has forgotten you
-int PubSubClientTools::resubscribe() {
+int PubSubClientMulti::resubscribe() {
     int count = 0;
     DBGln(3, "+res");
     pubSub.setCallback(mqtt_callback);
@@ -167,7 +167,7 @@ int PubSubClientTools::resubscribe() {
 }
 
 // Private
-void PubSubClientTools::callback(char * topicChar, uint8_t * payload, unsigned int length) {
+void PubSubClientMulti::callback(char * topicChar, uint8_t * payload, unsigned int length) {
     unsigned long len = length;
     const std::string topic_cpy(topicChar);
     DBGln(3, "+cb");

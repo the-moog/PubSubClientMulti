@@ -1,5 +1,5 @@
-#ifndef __PubSubClientTools_h__
-#define __PubSubClientTools_h__
+#ifndef __PubSubClientMulti_h__
+#define __PubSubClientMulti_h__
 
 
 // Platform
@@ -15,24 +15,21 @@
 #include "CallBackTopic.h"
 
 
-#if !defined(ESP8266) && !defined(ESP32)
-#warning This library was developed for ESP8266 and ESP32 microcontrollers
-#endif
-
 void dummy_cb(CALLBACK_ARGS);
 
 
-// External Interfaces use String for onward compatability
+// External Interfaces use Arduino 'String' class for onward compatability
+// Overloaded funtions for other types are provided
 // Internally we use std::string as it makes using standard C++ easer
 
-class PubSubClientTools {
+class PubSubClientMulti {
     private:
         PubSubClient & pubSub;
 
         std::list<CallBackTopic> callBackList = {};
 
         // Multiplexed callback provided to pubSub
-        std::function<void(char * topicChar, uint8_t * payload, unsigned int length)> mqtt_callback = std::bind(&PubSubClientTools::callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+        std::function<void(char * topicChar, uint8_t * payload, unsigned int length)> mqtt_callback = std::bind(&PubSubClientMulti::callback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
         void callback(char * topicChar, uint8_t * payload, unsigned int length);
 
         // Internal lookup - returns nullptr if not found
@@ -40,7 +37,7 @@ class PubSubClientTools {
             const callback_pt cb_ptr=nullptr);
 
     public:
-        PubSubClientTools(PubSubClient & pubSub);
+        PubSubClientMulti(PubSubClient & pubSub);
 
         size_t countCallBacks() { return callBackList.size();};
 
