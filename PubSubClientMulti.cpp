@@ -102,10 +102,13 @@ bool PubSubClientMulti::subscribe(const std::string & topic, const callback_pt c
     //Existing callbacks with new topics are permitted
     CallBackTopic * p_cbt = findCallbackTopic(topic, cb_ptr);
     if (p_cbt == nullptr) {
+        DBGf(1,"\nSubscribing to '%s'", topic.c_str());
         CallBackTopic cbt(topic, cb_ptr);
         callBackList.push_back(cbt);
         DBGln(3, "sub+");
         p_cbt = &cbt;
+    } else {
+        DBGf(1,"\nnot Subscribing to '%s', already subscribed", topic.c_str());
     }
     DBGln(3, "sub-");
     return pubSub.subscribe(p_cbt->getTopic());
@@ -120,10 +123,16 @@ return:
  true if you were unsubscribed or you were never subscribed
 */
 bool PubSubClientMulti::unsubscribe(const std::string & topic) {
-    CallBackTopic * p_cbt;
+    CallBackTopic * p_cbt = findCallbackTopic(topic);
+    
+    if (p_cbt == nullptr) {
+        DBGf(1,"\nnot un-subscribing from '%s', not subscribed", topic.c_str());
+    }
 
     // Ask the Broker to unsubscribe
     if(!pubSub.unsubscribe(topic.c_str())) return false;
+
+    DBGf(1,"\nun-subscribed from '%s'", topic.c_str());
 
     // If that worked, delete the records
     callBackList.remove_if(
@@ -139,16 +148,24 @@ bool PubSubClientMulti::unsubscribe(const std::string & topic) {
 // You can suspend a given callback or a given topic or both
 // Returns true if anything changed else false
 bool PubSubClientMulti::pause_restore(const std::string & topic, const callback_pt callback, bool pause) {
-    CallBackTopic * p_cb;
+    CallBackTopic * p_cbt;
     bool ret = false;
 
     if (topic.empty() && callback == nullptr)return ret;
 
     for (CallBackTopic & cbt : callBackList) {
+        p_cbt=&cbt;
         if (callback != nullptr && callback != cbt.getCallBack())continue;
         if (topic != "" && topic != cbt.getTopic())continue;
-        cbt.paused = pause;
         ret = true;
+    }
+
+    if(ret) {
+        if(p_cbt->paused != pause)DBGf(1,"\n%sPausing '%s'", pause?"":"un-", topic.c_str());
+        else DBGf(1,"\n'%s', already %sPaused", pause?"":"un-", topic.c_str());
+        p_cbt->paused = pause;
+    } else {
+        DBGf(1,"\nnot Pausing '%s', topic not found", topic.c_str());
     }
     return ret;
 }
