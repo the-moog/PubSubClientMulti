@@ -1,18 +1,25 @@
 **PubSubClientMulti**
 
+*NOTE:*  Work in progress:
+
+TODO:
+ - Update examples
+ - Add test cases
+ - and test it better
+
 *About:*
 This is essentially a fork that reworks [ArduinoPubSubClientTools](https://github.com/dersimn/ArduinoPubSubClientTools), I am not sure about backwards compatability though, hence the name change.
 
 - Altered to make the internals more flexible
 - Add authentication
-- Use more modern C++ syntax
+- Use more modern C++ syntax (probably at the expense of less diverse platform compatability)
 - Remove the number of needless overloads
 - Add unsubscribe method
 - Add pause method
 - Easier to interface with other libraries through overloads on publish, subscribe etc. 
 
 *Naming:*  The prefix Arduino has been removed to better associate it with a hard dependency on PubSubClient
-The suffix Multi has been added to indicate it's one and only function.
+The suffix Multi has been added to indicate it's one and only function, managing Many<->Many mapping of feeds to callbacks.
 
 *Rationalle:*  The purpose of this project is to make it easier to support and manage subscribe, unsubscribe 
 of multiple feeds with multiple callbacks.
