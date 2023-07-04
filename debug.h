@@ -2,7 +2,8 @@
 #define __PSCT_DEBUG_H__
 
 
-
+#ifndef USE_DBG_LEVEL
+#define USE_DBG_LEVEL
 
 //Higher = more debug
 #ifndef PUB_SUB_CLIENT_TOOLS_DBGLVL
@@ -30,7 +31,7 @@
 #define DBGf(lvl,...) if(lvl < PUB_SUB_CLIENT_TOOLS_DBGLVL)Serial_printf(__VA_ARGS__)
 #define DBGln(lvl,...) if(lvl < PUB_SUB_CLIENT_TOOLS_DBGLVL)Serial_println(__VA_ARGS__)
 
-
+#endif
 
 #endif
 
